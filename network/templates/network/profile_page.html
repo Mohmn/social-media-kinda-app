@@ -1,0 +1,105 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block style %}
+<link href="{% static 'network/css/posts.css' %}" rel="stylesheet">
+<link href="{% static 'network/css/user_prof.css' %}" rel="stylesheet">
+<script src="{% static 'network/js/sm_posts.js' %}"></script>
+{% endblock  %}
+
+{% block body %}
+
+<div class="head-prof">
+    <h3 class="unm">{{ruser.username}}</h3>
+    {% if request.user.id is not ruser.id %}
+    {% if already_follows  %}
+    <button type="button" class="fol-button btn btn-success" data-toggle="modal" data-target="#exampleModal">
+        follow
+    </button>
+    {% else %}
+    <button type="button" class="fol-button btn btn-outline-success" data-toggle="modal" data-target="#eampleModal">
+        follow
+    </button>
+    {% endif %}
+    <button id="msg-icon" data-toggle="modal" data-target="#messages">
+        <i class="far fa-envelope fa-3x"></i>
+    </button>
+
+    {% endif %}
+</div>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered ">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h3 class="m_b">Unfollow {{ruser.username}} </h3>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button><br>
+                <div>
+                    <p id="unf-body">Their postss will no longer be shown on your timeline</p>
+                    <button type="button" class="cls-md btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="unfollow-md btn btn-primary">Unfollow</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="user-details">
+    <a id="following" class="folwi" href="#">{{ruser.following.count}} following</a>
+    <a id="followers" class="folwe" href="#">{{ruser.followers.count}} followers</a>
+</div>
+<ul class="list-group" id="follow-list">
+    <li class="list-group-item border-0  follow-list-item d-flex justify-content-between align-items-center">
+        <span id="disp-fol">Following</span>
+        <span class="fol-left" id="close">&times</span>
+    </li>
+</ul>
+
+
+{% for post in ruser.posts.all %}
+<div class="posts">
+    <h4 class="u-con-prof"><a
+            href="{% url 'profile' name=post.uploaded_by.username %}">{{ post.uploaded_by.username }}</a></h4>
+    <div class="bod">
+        <p class="post-content">{{ post.post }}</p>
+        <i class="fas fa-heart like-but">{{post.likes}}</i>
+    </div>
+</div>
+
+{% endfor %}
+
+
+
+
+<div class="modal fade" id="messages" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    aria-labelledby="messagesLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" id="msg-modal-dialog">
+        <div class="modal-content" id="msg-modal-content">
+            <div class="modal-header" id="msg-header">
+                <p class="msg-head" id="msg-user">{{ruser.username}}</p>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="message-body">
+
+                </div>
+            </div>
+            <div class="modal-footer  justify-content-between border-0 ">
+
+                <textarea class="form-control" placeholder="type a message"  id="msg-value"></textarea>
+
+                <i class="fas fa-caret-right fa-3x"></i>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+{% endblock %}

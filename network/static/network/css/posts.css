@@ -1,0 +1,29 @@
+h4{
+ 
+  color: #004e00;
+}
+
+
+.post-content {
+  /* width: 10%; */
+  word-wrap:break-word;
+  max-width: 30%;
+}
+
+.posts {
+  padding-left: 4%;
+  padding-top: 2%;
+}
+
+.bod {
+  padding-left: 1%;
+}
+
+.fa-heart{
+  color: #cfc9c9;
+}
+
+body {
+  padding: 1%;
+}
+

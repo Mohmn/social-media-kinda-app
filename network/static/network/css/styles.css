@@ -1,0 +1,17 @@
+textarea {
+
+    max-width: 40%;
+   
+
+}
+
+textarea:focus{
+    border-color: #28a745 !important;
+    
+}
+.body {
+
+    padding:2%;
+}
+
+

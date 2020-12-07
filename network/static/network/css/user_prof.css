@@ -1,0 +1,149 @@
+.unm,
+.fol-btn,
+.m_b,
+.btn-close {
+  display: inline-block;
+}
+
+.unm {
+  float: left;
+}
+.fol-button {
+  float: right;
+  margin-right: 10%;
+}
+#msg-icon {
+  float: right;
+  margin-right: 10%;
+  color: rgb(25, 135, 84);
+  padding: 0 !important;
+  border: none !important;
+  background: none !important;
+  /* font-size: 40px !important; */
+}
+
+.head-prof {
+  padding: 2%;
+}
+
+.btn-close {
+  float: right;
+}
+
+.folwi,
+.folwe {
+  display: inline-block;
+  padding: 1%;
+  font-size: medium;
+  color: gray !important;
+}
+
+.user-details {
+  margin-top: 3%;
+  padding: 2%;
+}
+.btn-outline-success:hover {
+  background-color: white;
+  color: #28a745;
+}
+
+.cls-md {
+  float: left;
+  width: 45%;
+}
+
+.unfollow-md {
+  float: right;
+  width: 45%;
+}
+
+#messageBox-close,
+#close {
+  color: #aaaaaa;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+#messageBox-close:hover,
+#close:hover,
+#messageBox-close:focus,
+#close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: default;
+}
+
+#follow-list {
+  position: fixed;
+  display: none;
+  z-index: 1000;
+  min-width: 50%;
+  min-height: 50%;
+}
+hr {
+  margin-top: 2px;
+  border-color: black !important;
+  border: 1px solid black;
+  color: black;
+}
+/* meaage modal */
+#messages {
+  margin-top: 3% !important;
+}
+#msg-modal-content,
+#msg-modal-dialog {
+  height: 80% !important;
+  margin-right: 25% !important;
+}
+
+.fa-caret-right {
+  border-radius: 50%;
+  color: #28a745 !important;
+  cursor: pointer;
+  float: right !important;
+  display: none;
+}
+
+.fa-caret-right:hover,
+.fa-caret-right:focus {
+  color: rgb(44, 90, 68) !important;
+}
+
+.message-content-sender {
+  display: flex;
+  justify-content: flex-end;
+  align-items: baseline;
+  background-color:rgba(255, 166, 0, 0.979);
+  /* max-width: fit-content; */
+  flex-basis: fill;
+  border-radius: 10%;
+  margin-bottom: 1%;
+  
+}
+
+.message-content-reciever {
+  display: flex;
+  justify-content: flex-start;
+  flex-basis: fill;
+  align-items: baseline;
+  background-color: pink;
+  border-radius: 10%;
+  margin-bottom: 1%;
+  
+}
+}
+
+.text-msg {
+  flex:1;
+  padding: 5px;
+}
+
+#msg-value {
+  float: left !important;
+  max-width: 75%;
+  max-height: 30%;
+}
+
+#msg-header {
+  padding: 2%;
+}
