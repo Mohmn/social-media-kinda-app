@@ -1,17 +1,10 @@
 textarea {
-
-    max-width: 40%;
-   
-
+  max-width: 40%;
 }
 
-textarea:focus{
-    border-color: #28a745 !important;
-    
+textarea:focus {
+  border-color: #28a745 !important;
 }
 .body {
-
-    padding:2%;
+  padding: 2%;
 }
-
-

@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    console.log('ssss')
     let likeButtons = document.getElementsByClassName('like-but')
     for (let i = 0; i < likeButtons.length; i++) {
         likeButtons[i].addEventListener('click', animate, false)
@@ -19,14 +18,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
     })
     document.getElementById('msg-value').addEventListener('keyup', checkmsg)
-    document.getElementById('msg-icon').addEventListener('click', connectToWebsocket)
+    document.getElementById('msg-icon').addEventListener('click', sendingWebSocket)
+    document.getElementById('msg-icon').addEventListener('click', function(){
+        console.log('cm')
+    })
 })
 
 function connectToWebsocket() {
     const roomName = document.getElementsByClassName('msg-head')[0].textContent;
     const sender  = document.getElementById('username').textContent;
     const reciever = document.getElementById('msg-user').textContent;
-
+    console.log(roomName,sender,reciever)
     const chatSocket = new WebSocket(
         'ws://' +
         window.location.host +
@@ -36,6 +38,7 @@ function connectToWebsocket() {
 
     chatSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
+        console.log(data)
         if(data.reciever === sender){
         sendMessage('other',data.message);
         }
@@ -51,12 +54,52 @@ function connectToWebsocket() {
         chatSocket.send(JSON.stringify({
             'message': message,
             'sender': sender,
-            'reciever': reciever
+            'reciever': reciever,
+            'type':'message',
         }));
     }
 }
 
 
+
+function sendingWebSocket() {
+    // const roomName = document.getElementsByClassName('msg-head')[0].textContent;
+    const sender  = document.getElementById('username').textContent;
+    const reciever = document.getElementById('msg-user').textContent;
+    const roomName = reciever
+    console.log(roomName,sender,reciever)
+    const chatSocket = new WebSocket(
+        'ws://' +
+        window.location.host +
+        '/ws/dm/' +
+        roomName
+    );
+
+    // chatSocket.onmessage = function (e) {
+    //     const data = JSON.parse(e.data);
+    //     console.log(roomName,sender,reciever,'r')
+    //     console.log(data)
+    //     if(data.reciever === sender){
+    //     sendMessage('other',data.message);
+    //     }
+    // };
+
+    chatSocket.onclose = function (e) {
+        console.error('Chat socket closed unexpectedly');
+
+    };
+
+    document.getElementsByClassName('fa-caret-right')[0].onclick = function (e) {
+        console.log(roomName,sender,reciever,'s')
+        const message = sendMessage('myself');
+        chatSocket.send(JSON.stringify({
+            'message': message,
+            'sender': sender,
+            'reciever': reciever,
+            'type':'chat_message',
+        }));
+    }
+}
 
 function animate() {
     if (window.getComputedStyle(this)['color'] === "rgb(207, 201, 201)") {
