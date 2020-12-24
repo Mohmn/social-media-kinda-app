@@ -5,6 +5,7 @@ from . import views
 
 urlpatterns = [
     path("", views.index, name="index"),
+    path("recent_messages",views.recent_messages,name="messages"),
     path("profile/<str:name>", views.user_profile, name="profile"),
     path("update_followers/<str:verb>", views.update_followers),
     path("following/<str:name>", views.following_list),

@@ -48,7 +48,7 @@
                 </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="#">messages <span id="notif-count" class="badge bg-secondary"></span></a>
+                    <a class="nav-link" href="{% url 'messages' %}">messages <span id="notif-count" class="badge bg-secondary"></span></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'logout' %}">Log Out</a>

@@ -6,12 +6,29 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 import json
 
-from .models import User, Posts
+from .models import User, Posts,Messages
 
 
 def index(request):
     return render(request, "network/index.html")
 
+def recent_messages(request):
+    if request.method == "GET":
+        if request.user.is_authenticated:
+            try:
+                ids = request.user.reciever_messages.order_by('sender','-timestamp').distinct('sender') 
+                messages_and_username = list(Messages.objects.filter(id__in=ids).order_by('-timestamp').values('sender__username','text')) 
+                print(messages_and_username)
+                return render(request, "network/message_page.html",
+                          {'posts': posts}
+                          )
+            except Exception as e:
+                print(e)
+                return JsonResponse({'messages_and_username': False}, status=200)
+        else:
+            return redirect((reverse("login")))
+    else:
+        return redirect((reverse("index")))
 
 def post_update(request):
     if request.method == "POST":

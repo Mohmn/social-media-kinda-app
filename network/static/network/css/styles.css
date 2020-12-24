@@ -8,3 +8,7 @@ textarea:focus {
 .body {
   padding: 2%;
 }
+
+#user-messages{
+  cursor: pointer;
+}
