@@ -1,17 +1,117 @@
-textarea {
-
-    max-width: 40%;
-   
-
+post:focus {
+  border-color: #28a745 !important;
+}
+body {
+  padding: 2%;
 }
 
-textarea:focus{
-    border-color: #28a745 !important;
-    
+.message-box {
+  padding-left: 3% !important;
+  margin-bottom: 5% !important;
+  /* line-height: 2%; */
 }
-.body {
-
-    padding:2%;
+.message-user {
+  color: #0d6efd;
+  padding: 1% !important;
+  font-size: 30px;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+.userNameMsg{
+  color: #0d6efd;
+  padding: 1% !important;
+  font-size: 30px;
+}
+.message-text {
+  color: #000000;
+  padding: 2%;
+  word-wrap: break-word;
+  max-width: 60%;
+}
+.last-text {
+  color: #616162 !important;
+  margin-left: 3% !important;
+  margin-top: 0px !important;
+  padding-top: 0 !important;
+  overflow:  hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap;
+  display: inline-block;
+  width: 70%;
 }
 
+/* .message-user + .last-text { 
+  padding-top: -200px; 
+} */
+.message-box:hover {
+  cursor: pointer;
+}
 
+#partic-msg-id {
+  /* /*    width: ; */
+  max-height: 340px !important;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+#user-paritc-msg {
+  /* margin: 0 !important;
+  padding: 0 !important; */
+  background-color: rgb(218, 242, 242) !important;
+    padding: 2% !important;
+}
+
+.fa-caret-right {
+  border-radius: 50%;
+  color: #28a745 !important;
+  cursor: pointer;
+  float: right !important;
+  height: 10% !important;
+  /* display: none; */
+}
+
+.fa-caret-right:hover,
+.fa-caret-right:focus {
+  color: rgb(44, 90, 68) !important;
+}
+
+#msg-value {
+  /* float: left !important; */
+  max-width:  80% !important;
+  display: inline;
+  height: 20px !important;
+}
+
+#send-particular-msg {
+ 
+  position: sticky !important;
+  bottom: 0 !important;
+  padding: 2% 2% 0 2% !important;
+  z-index: 1020;
+}
+
+.message-user{
+  display: inline-block !important;
+  vertical-align: middle !important;
+}
+.badge {
+  float: right !important;
+  margin-right: 5% !important;
+}
+.fa-arrow-left,#secUserName{
+    display: inline-block !important;
+    vertical-align: middle !important;  /* add me */
+}
+
+.fa-arrow-left{
+  cursor: pointer;
+  color: #28a745 !important;
+}
+
+.fa-arrow-left:hover{
+  cursor: pointer;
+}
+
+#secUserName{
+  float: right;
+}

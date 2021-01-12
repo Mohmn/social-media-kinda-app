@@ -20,8 +20,17 @@ class Messages(models.Model):
     sender    =   models.ForeignKey("User", on_delete=models.CASCADE,related_name="sended_messages")
     reciever  =   models.ForeignKey("User", on_delete=models.CASCADE,related_name="reciever_messages")
     text      =   models.CharField( max_length=1500)
+    read      =   models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.text
+
+    def serialize(self):
+        return {
+            "sender": self.sender.username,
+            "text": self.text,
+            "timestamp": self.timestamp.strftime("%b %-d %Y, %-I:%M %p"),
+            "read": self.read,
+        }
 

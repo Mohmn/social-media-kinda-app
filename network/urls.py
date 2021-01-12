@@ -11,6 +11,7 @@ urlpatterns = [
     path("followers/<str:name>", views.follower_list),
     path("update_post", views.post_update),
     path("posts", views.posts, name="all-postes"),
+    path("message_history/<str:second_user>",views.message_history),
     path("login", views.login_view, name="login"),
     path("logout", views.logout_view, name="logout"),
     path("register", views.register, name="register")

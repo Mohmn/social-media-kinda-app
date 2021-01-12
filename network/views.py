@@ -3,14 +3,60 @@ from django.db import IntegrityError
 from django.http import JsonResponse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
+from django.db.models import Q
 from django.urls import reverse
 import json
 
-from .models import User, Posts
+from .models import User, Posts,Messages
 
 
 def index(request):
-    return render(request, "network/index.html")
+    # return render(request, "network/index.html")
+    if request.method == "GET":
+        if request.user.is_authenticated:
+            posts = Posts.objects.order_by("-created_on").all()
+            ids = request.user.reciever_messages.order_by('sender','-timestamp').distinct('sender') 
+            messages_and_username = list(Messages.objects.filter(id__in=ids).order_by('-timestamp').values('sender__username','text')) 
+            print(posts,messages_and_username)
+            return render(request, "network/index.html",
+                          {'posts': posts,
+                          'messages_and_usernames':messages_and_username}
+                          )
+        else:
+            return redirect((reverse("login")))
+    else:
+        return redirect((reverse("index")))
+    
+def d(request):
+    return render(request, "network/new design.html")
+
+def spa(request):
+    if request.method == "GET":
+        if request.user.is_authenticated:
+            return render(request, "network/spa.html")
+        else:
+            return redirect((reverse("login")))
+    else:
+        return redirect((reverse("index")))
+
+
+
+def message_history(request,second_user):
+    if request.method == "GET":
+        if request.user.is_authenticated:
+            try:
+                u = User.objects.filter(username=second_user)[0]
+                condition = ( Q(sender=request.user, reciever=u) | Q(sender=u, reciever=request.user)  )  
+                messages = Messages.objects.filter(condition).order_by('-timestamp').all()
+                 
+                return JsonResponse({'messages':[message.serialize() for message in messages]}, status=200)
+            except Exception as e:
+                print(e)
+                return JsonResponse({'messages_and_username': False}, status=200)
+        else:
+            return redirect((reverse("login")))
+    else:
+        return redirect((reverse("index")))
 
 
 def post_update(request):
@@ -63,6 +109,20 @@ def posts(request):
     else:
         return redirect((reverse("index")))
 
+
+def spa_posts(request):
+
+    if request.method == "GET":
+        if request.user.is_authenticated:
+            posts = Posts.objects.order_by("-created_on").all()
+            return JsonResponse([post.serialize() for post in posts], safe=False)
+        else:
+            return redirect((reverse("login")))
+    else:
+        return redirect((reverse("index")))
+
+
+
 def following_list(request,name):
     if request.method == "GET":
         if request.user.is_authenticated:
@@ -104,6 +164,22 @@ def user_profile(request, name):
                               {'ruser': r_user,
                                'already_follows': request.user.following.filter(pk=r_user.pk).exists()
                               })
+            else:
+                return JsonResponse({'successfull': False})
+        else:
+            return redirect((reverse("login")))
+    else:
+        return redirect((reverse("index")))
+
+def userProfileSpa(request, name):
+    if request.method == "GET":
+        if request.user.is_authenticated:
+            r_user = User.objects.filter(username=str(name)).first()
+            if r_user != None:
+                return JsonResponse({'ruser_info': r_user.serialize(),
+                    'already_follows': request.user.following.filter(pk=r_user.pk).exists(),
+                    'ruser':r_user.username,'is_logged_in_user': request.user is r_user,
+                    'user_posts':[post.serialize() for post in r_user.posts.all()]},status=200)
             else:
                 return JsonResponse({'successfull': False})
         else:
