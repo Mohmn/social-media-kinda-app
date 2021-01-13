@@ -34,3 +34,8 @@ class Messages(models.Model):
             "read": self.read,
         }
 
+class LastMessageSeen(models.Model):
+    sender    =   models.ForeignKey("User", on_delete=models.CASCADE,related_name="s")
+    reciever  =   models.ForeignKey("User", on_delete=models.CASCADE,related_name="r")
+    last_seen_message_date = models.DateTimeField(auto_now_add=True)
+

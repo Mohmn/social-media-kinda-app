@@ -3,35 +3,76 @@ document.addEventListener("DOMContentLoaded", function () {
     let user_messages = document.getElementsByClassName('message-box')
 
     for (let index = 0; index < user_messages.length; index++) {
+
         user_messages[index].addEventListener('click', function () {
             
             loadMessagesOfUser(this.children[0].innerText)
-        })
+            endingWebSocket(document.getElementById('username').innerText,this.children[0].innerText)
+        })   
+        
     }
-    document.getElementById('back-button').addEventListener('click',delDivMsgsAndGetBack)
+    document.getElementById('back-button').addEventListener('click', delDivMsgsAndGetBack)
     document.getElementById('msg-value').addEventListener('keyup', checkmsg)
-    document.getElementsByClassName('fa-caret-right')[0].addEventListener('click',scrollBottom)
+    // document.getElementsByClassName('fa-caret-right')[0].addEventListener('click', sendmessage())
 })
 
+function endingWebSocket(s,r) {
 
+    const sender = s
+    const reciever = r;
+    const roomName = reciever
 
-function scrollBottom(){
-    console.log("addd")
-    const message  = document.getElementById('msg-value').value
-    addMessagesTodiv(document.getElementById('load_messages_user'),'m',message)
+    console.log("tangofuckit")
+    console.log(roomName, sender,"show-partic-msgs")
+    const chatSocket = new WebSocket(
+        'ws://' +
+        window.location.host +
+        '/ws/dm/' +
+        roomName
+    );
+    document.getElementById('back-button').onclick = function(){
+        chatSocket.close()
+    }
+    chatSocket.onclose = function (e) {
+        console.error('Chat socket closed unexpectedly');
+
+    };
+
+    document.getElementsByClassName('fa-caret-right')[0].onclick = function (e) {
+        console.log(roomName, sender, reciever, 's')
+        const message = document.getElementById('msg-value')
+        addMessagesTodiv(document.getElementById('load_messages_user'), sender, message.value)
+        chatSocket.send(JSON.stringify({
+            'message': message.value,
+            'sender': sender,
+            'reciever': reciever,
+            'type': 'chat_message',
+        }));    
+        const scrollDiv = document.getElementById('partic-msg-id')
+        scrollDiv.scrollTop = scrollDiv.scrollHeight
+        message.value = ""
+
+    }
+}
+
+function sendmessage() {
+    console.log("send message from main timeline")
+    const message = document.getElementById('msg-value').value
+    addMessagesTodiv(document.getElementById('load_messages_user'), 'm', message)
     const scrollDiv = document.getElementById('partic-msg-id')
     scrollDiv.scrollTop = scrollDiv.scrollHeight
 
 }
 
-function delDivMsgsAndGetBack(){
-        document.getElementById('general_msgs').style.display = "block";
-        document.getElementById('partic-msg').style.display = "none";
-        const msgDiv = document.getElementById('load_messages_user')
-        const numChildren = msgDiv.childElementCount
-        for(let i=0;i<numChildren;i++){
-            msgDiv.removeChild(msgDiv.children[0])
-        }
+function delDivMsgsAndGetBack() {
+    document.getElementById('general_msgs').style.display = "block";
+    document.getElementById('partic-msg').style.display = "none";
+    const msgDiv = document.getElementById('load_messages_user')
+    const numChildren = msgDiv.childElementCount
+    for (let i = 0; i < numChildren; i++) {
+        msgDiv.removeChild(msgDiv.children[0])
+    }
+    
 
 }
 
@@ -47,10 +88,10 @@ function loadMessagesOfUser(second_user) {
             document.getElementById('general_msgs').style.display = "none";
             document.getElementById('partic-msg').style.display = "block";
             const msgDiv = document.getElementById('load_messages_user')
-            for(let index=messages.length-1;index>=0;index--){
-                addMessagesTodiv(msgDiv,messages[index]['sender'],messages[index]['text'])
+            for (let index = messages.length - 1; index >= 0; index--) {
+                addMessagesTodiv(msgDiv, messages[index]['sender'], messages[index]['text'])
             }
-            
+
         })
 }
 
@@ -73,12 +114,15 @@ function checkmsg() {
 }
 
 
-function addMessagesTodiv(Div,user,text){
-    const  indivMsgDiv = document.createElement('div')
-    indivMsgDiv.className ="form-group message-box border-bottom"
+function addMessagesTodiv(Div, user, text) {
+    const scrollDiv = document.getElementById('partic-msg-id')
+    scrollDiv.scrollTop = scrollDiv.scrollHeight
+
+    const indivMsgDiv = document.createElement('div')
+    indivMsgDiv.className = "form-group message-box border-bottom"
 
     const userName = document.createElement('h6')
-    userName.className="message-user"
+    userName.className = "message-user"
     userName.innerText = user
 
     const message = document.createElement('small')

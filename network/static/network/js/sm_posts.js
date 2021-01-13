@@ -19,9 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     document.getElementById('msg-value').addEventListener('keyup', checkmsg)
     document.getElementById('msg-icon').addEventListener('click', sendingWebSocket)
-    document.getElementById('msg-icon').addEventListener('click', function(){
-        console.log('cm')
-    })
+
 })
 
 function connectToWebsocket() {

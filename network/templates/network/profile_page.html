@@ -1,4 +1,3 @@
-
 {% extends "network/layout.html" %}
 {% load static %}
 
@@ -18,12 +17,16 @@
         follow
     </button>
     {% else %}
-    <button type="button" class="fol-button btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#eampleModal">
+    <button type="button" class="fol-button btn btn-outline-success" data-bs-toggle="modal"
+        data-bs-target="#eampleModal">
         follow
     </button>
     {% endif %}
     <button id="msg-icon" data-bs-toggle="modal" data-bs-target="#messages">
-        <i class="far fa-envelope fa-3x"></i>
+        <div class="ntfsAndName">
+            <i class="far fa-envelope fa-3x"></i>
+            <span class="badge rounded-pill bg-info text-dark"></span>
+        </div>
     </button>
 
     {% endif %}
@@ -91,7 +94,7 @@
             </div>
             <div class="modal-footer  justify-content-between border-0 ">
 
-                <textarea class="form-control" placeholder="type a message"  id="msg-value"></textarea>
+                <textarea class="form-control" placeholder="type a message" id="msg-value"></textarea>
 
                 <i class="fas fa-caret-right fa-3x"></i>
 
@@ -105,4 +108,3 @@
 
 
 {% endblock %}
-

@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     listeningWebSocket()
-    document.getElementById('user-messages').addEventListener('click', getMessagesOfUser)
+    // document.getElementById('user-messages').addEventListener('click', getMessagesOfUser)
 })
 
 function getMessagesOfUser() {
@@ -32,44 +32,62 @@ function listeningWebSocket() {
 
         const generalMsg = document.getElementById('general_msgs')
         const privateMsg = document.getElementById('partic-msg')
+        if (generalMsg !== null) {
+            // means page is on the main page
+            if (window.getComputedStyle(generalMsg)['display'] === 'block') {
+                const msgTo = document.getElementsByClassName(`${data['sender']}` + 'Msg')[0]
+                let notifications = msgTo.children[1].children[1].innerText
+                msgTo.children[1].children[0].innerText = data['message']
+                if (notifications === '') {
+                    msgTo.children[1].children[1].innerText = '1'
+                } else {
+                    console.log("int")
+                    msgTo.children[1].children[1].innerText = parseInt(notifications) + 1
+                }
 
-        if (window.getComputedStyle(generalMsg)['display'] === 'block') {
-            const msgTo = document.getElementsByClassName(`${data['sender']}` + 'Msg')[0]
-            let notifications = msgTo.children[1].children[1].innerText
-            msgTo.children[1].children[0].innerText = data['message']
-            if (notifications === '') {
-                msgTo.children[1].children[1].innerText = '1'
-            } else {
-                console.log("int")
-                msgTo.children[1].children[1].innerText = parseInt(notifications) + 1
+            } else if (window.getComputedStyle(privateMsg)['display'] === 'block') {
+                console.log("yiiiiiiiii", data['sender'])
+                if (data['sender'] === document.getElementById('secUserName').innerText) {
+
+                    const msgDiv = document.getElementById('load_messages_user')
+                    addMessagesTodiv(msgDiv, data['sender'], data['message'])
+
+                    const scrollDiv = document.getElementById('partic-msg-id')
+                    scrollDiv.scrollTop = scrollDiv.scrollHeight
+                }
+
             }
+        } else {
+            // means  user is one the profile page
+            console.log("profile page")
+            const messages = document.getElementById('messages')
+            if (messages !== null) {
 
-        } else if (window.getComputedStyle(generalMsg)['display'] === 'none') {
+                if (window.getComputedStyle(messages)['display'] === 'block') {
 
+                    if (data.reciever === sender) {
+                        sendMessage('other', data.message);
+                    }
+                } else if (document.getElementById('msg-icon') !== null) {
+                    console.log("notiffffffff")
+                    const notif = document.getElementsByClassName('badge')[0]
+                    if (notif.innerText === '') notif.innerText = "1";
+                    else {
+                        notif.innerText = parseInt(notif.innerText) + 1
+                    };
+                }
+            }
         }
 
-        // if (document.getElementById('msg-value') !== null) {
 
-        //     if (data.reciever === sender) {
-        //         sendMessage('other', data.message);
-        //     }
-        // }else if(document.getElementById('msg-icon') !== null){
+        chatSocket.onclose = function (e) {
+            console.error('Chat socket closed unexpectedly');
 
-        // }else{
-        //     const not = document.getElementById("notif-count");
-        //     if(not.innerText === '') not.innerText = "1";
-        //     else {not.innerText = parseInt(not.innerText) + 1};
+        };
 
-        // }
+
+
     }
-
-    chatSocket.onclose = function (e) {
-        console.error('Chat socket closed unexpectedly');
-
-    };
-
-
-
 }
 
 
@@ -88,4 +106,50 @@ function getCookie(name) {
         }
     }
     return cookieValue
+}
+
+function addMessagesTodiv(Div, user, text) {
+    const scrollDiv = document.getElementById('partic-msg-id')
+    scrollDiv.scrollTop = scrollDiv.scrollHeight
+
+    const indivMsgDiv = document.createElement('div')
+    indivMsgDiv.className = "form-group message-box border-bottom"
+
+    const userName = document.createElement('h6')
+    userName.className = "message-user"
+    userName.innerText = user
+
+    const message = document.createElement('small')
+    message.className = "message-text"
+    message.innerText = text
+
+    indivMsgDiv.appendChild(userName)
+    indivMsgDiv.appendChild(message)
+
+    Div.appendChild(indivMsgDiv)
+
+}
+
+function sendMessage(who, recieved_msg) {
+
+    let msgBody = document.getElementsByClassName('message-body')[0];
+    let msg = document.createElement('div');
+
+    let msgValue = document.createElement('p');
+    msgValue.className = "text-msg";
+    if (who === 'myself') {
+        msg.className = "message-content-sender";
+        msgValue.innerText = document.getElementById('msg-value').value;
+        document.getElementsByClassName('fa-caret-right')[0].style.display = "none";
+    } else {
+        msg.className = "message-content-reciever";
+        msgValue.innerText = recieved_msg;
+    }
+
+
+    msg.appendChild(msgValue);
+    msgBody.appendChild(msg);
+    document.getElementById('msg-value').value = "";
+
+    return msgValue.innerText;
 }

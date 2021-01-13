@@ -113,12 +113,11 @@ hr {
   display: flex;
   justify-content: flex-end;
   align-items: baseline;
-  background-color:rgba(255, 166, 0, 0.979);
+  background-color: rgba(255, 166, 0, 0.979);
   /* max-width: fit-content; */
   flex-basis: fill;
   border-radius: 10%;
   margin-bottom: 1%;
-  
 }
 
 .message-content-reciever {
@@ -129,12 +128,10 @@ hr {
   background-color: pink;
   border-radius: 10%;
   margin-bottom: 1%;
-  
-}
 }
 
 .text-msg {
-  flex:1;
+  flex: 1;
   padding: 5px;
 }
 
@@ -146,4 +143,11 @@ hr {
 
 #msg-header {
   padding: 2%;
+}
+
+.fa-envelope {
+  display: inline-block;
+}
+.badge {
+  float: right !important;
 }
