@@ -19,14 +19,23 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     document.getElementById('msg-value').addEventListener('keyup', checkmsg)
     document.getElementById('msg-icon').addEventListener('click', sendingWebSocket)
+    document.getElementById('message-btn-close').addEventListener('click', updateLastSeen)
 
 })
 
+function updateLastSeen() {
+    fetch (`../update_last_seen/${document.getElementsByClassName('unm')[0].innerText}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+        })
+}
+
 function connectToWebsocket() {
     const roomName = document.getElementsByClassName('msg-head')[0].textContent;
-    const sender  = document.getElementById('username').textContent;
+    const sender = document.getElementById('username').textContent;
     const reciever = document.getElementById('msg-user').textContent;
-    console.log(roomName,sender,reciever)
+    console.log(roomName, sender, reciever)
     const chatSocket = new WebSocket(
         'ws://' +
         window.location.host +
@@ -37,8 +46,8 @@ function connectToWebsocket() {
     chatSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
         console.log(data)
-        if(data.reciever === sender){
-        sendMessage('other',data.message);
+        if (data.reciever === sender) {
+            sendMessage('other', data.message);
         }
     };
 
@@ -53,7 +62,7 @@ function connectToWebsocket() {
             'message': message,
             'sender': sender,
             'reciever': reciever,
-            'type':'message',
+            'type': 'message',
         }));
     }
 }
@@ -62,10 +71,10 @@ function connectToWebsocket() {
 
 function sendingWebSocket() {
     // const roomName = document.getElementsByClassName('msg-head')[0].textContent;
-    const sender  = document.getElementById('username').textContent;
+    const sender = document.getElementById('username').textContent;
     const reciever = document.getElementById('msg-user').textContent;
     const roomName = reciever
-    console.log(roomName,sender,reciever)
+    console.log(roomName, sender, reciever)
     const chatSocket = new WebSocket(
         'ws://' +
         window.location.host +
@@ -88,13 +97,13 @@ function sendingWebSocket() {
     };
 
     document.getElementsByClassName('fa-caret-right')[0].onclick = function (e) {
-        console.log(roomName,sender,reciever,'s')
+        console.log(roomName, sender, reciever, 's')
         const message = sendMessage('myself');
         chatSocket.send(JSON.stringify({
             'message': message,
             'sender': sender,
             'reciever': reciever,
-            'type':'chat_message',
+            'type': 'chat_message',
         }));
     }
 }
@@ -125,11 +134,11 @@ function checkmsg() {
 
 }
 
-function sendMessage(who,recieved_msg) {
+function sendMessage(who, recieved_msg) {
 
     let msgBody = document.getElementsByClassName('message-body')[0];
     let msg = document.createElement('div');
-    
+
     let msgValue = document.createElement('p');
     msgValue.className = "text-msg";
     if (who === 'myself') {
@@ -141,7 +150,7 @@ function sendMessage(who,recieved_msg) {
         msgValue.innerText = recieved_msg;
     }
 
-    
+
     msg.appendChild(msgValue);
     msgBody.appendChild(msg);
     document.getElementById('msg-value').value = "";

@@ -36,15 +36,19 @@ function listeningWebSocket() {
             // means page is on the main page
             if (window.getComputedStyle(generalMsg)['display'] === 'block') {
                 const msgTo = document.getElementsByClassName(`${data['sender']}` + 'Msg')[0]
-                let notifications = msgTo.children[1].children[1].innerText
-                msgTo.children[1].children[0].innerText = data['message']
-                if (notifications === '') {
-                    msgTo.children[1].children[1].innerText = '1'
-                } else {
-                    console.log("int")
-                    msgTo.children[1].children[1].innerText = parseInt(notifications) + 1
+                //if it is null then have to add it dynamicalyy
+                if (msgTo !== null) {
+                    let notifications = msgTo.children[1].children[1]
+                
+                    msgTo.children[1].children[0].innerText = data['message']
+                    if (notifications.innerText === '') {
+                        notifications.style.display = "block"
+                        msgTo.children[1].children[1].innerText = '1'
+                    } else {
+                        console.log("int")
+                        msgTo.children[1].children[1].innerText = parseInt(notifications.innerText) + 1
+                    }
                 }
-
             } else if (window.getComputedStyle(privateMsg)['display'] === 'block') {
                 console.log("yiiiiiiiii", data['sender'])
                 if (data['sender'] === document.getElementById('secUserName').innerText) {

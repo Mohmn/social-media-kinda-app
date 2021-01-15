@@ -6,8 +6,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         user_messages[index].addEventListener('click', function () {
             
+            this.children[1].children[1].innerText = ""
+            this.children[1].children[1].style.display = 'none';
             loadMessagesOfUser(this.children[0].innerText)
             endingWebSocket(document.getElementById('username').innerText,this.children[0].innerText)
+            
         })   
         
     }
@@ -31,6 +34,7 @@ function endingWebSocket(s,r) {
         roomName
     );
     document.getElementById('back-button').onclick = function(){
+        updateLastSeeen(reciever)
         chatSocket.close()
     }
     chatSocket.onclose = function (e) {
@@ -134,4 +138,13 @@ function addMessagesTodiv(Div, user, text) {
 
     Div.appendChild(indivMsgDiv)
 
+}
+
+//updating last msg seen between users
+function updateLastSeeen(second_user) {
+    fetch (`../update_last_seen/${second_user}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+        })
 }

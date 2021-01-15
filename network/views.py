@@ -6,8 +6,8 @@ from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.urls import reverse
 import json
-
-from .models import User, Posts,Messages
+from datetime import datetime
+from .models import User, Posts,Messages ,LastMessageSeen
 
 
 def index(request):
@@ -17,10 +17,12 @@ def index(request):
             posts = Posts.objects.order_by("-created_on").all()
             ids = request.user.reciever_messages.order_by('sender','-timestamp').distinct('sender') 
             messages_and_username = list(Messages.objects.filter(id__in=ids).order_by('-timestamp').values('sender__username','text')) 
-            print(posts,messages_and_username)
+            # print(posts,messages_and_username)
+            [user.update({'unread_messages_count':number_of_unread_messages_between_two_users(request.user,User.objects.get(username=user['sender__username']))}) for user in messages_and_username]
             return render(request, "network/index.html",
                           {'posts': posts,
                           'messages_and_usernames':messages_and_username}
+                        #   'number_of_unread_messages_between_two_users_list'
                           )
         else:
             return redirect((reverse("login")))
@@ -40,6 +42,26 @@ def spa(request):
         return redirect((reverse("index")))
 
 
+def update_last_message_seen(request,user2):
+    if request.method == "GET":
+        if request.user.is_authenticated:
+            try:
+                u2 = User.objects.filter(username=user2)[0]
+                u1,u2 = request.user,u2
+                 
+                if LastMessageSeen.objects.filter(user1=u1,user2=u2).exists():
+                    LastMessageSeen.objects.filter(user1=u1,user2=u2).update(last_time_read=datetime.now())
+                else :
+                    l = LastMessageSeen(user1=u1,user2=u2,last_time_read=datetime.now())
+                    l.save()
+                return JsonResponse({'successfull':True},status=200)
+            except Exception as e:
+                print(e)
+                return JsonResponse({'successfull': False}, status=200)
+        else:
+            return redirect((reverse("login")))
+    else:
+        return redirect((reverse("index")))
 
 def message_history(request,second_user):
     if request.method == "GET":
@@ -152,6 +174,15 @@ def follower_list(request,name):
     else:
         return redirect((reverse("index")))
 
+def number_of_unread_messages_between_two_users(u1,u2):
+    try:
+        time_of_last_msg_seen = LastMessageSeen.objects.get(user1=u1,user2=u2).time_read()
+    except Exception as e:
+        return 0
+    condition = ( Q(sender=u1, reciever=u2) | Q(sender=u2, reciever=u1)  )  
+    unread_message_count = Messages.objects.filter(condition).filter(timestamp__range=[time_of_last_msg_seen,datetime.now()]).count()
+    return unread_message_count
+
 def user_profile(request, name):
     if request.method == "GET":
         if request.user.is_authenticated:
@@ -159,10 +190,11 @@ def user_profile(request, name):
             r_user = User.objects.filter(username=str(name)).first()
             # print(user)
             if r_user != None:
-
+                unread_messages = number_of_unread_messages_between_two_users(request.user,r_user)
                 return render(request, "network/profile_page.html",
                               {'ruser': r_user,
-                               'already_follows': request.user.following.filter(pk=r_user.pk).exists()
+                               'already_follows': request.user.following.filter(pk=r_user.pk).exists(),
+                               'unread_messages':unread_messages,
                               })
             else:
                 return JsonResponse({'successfull': False})

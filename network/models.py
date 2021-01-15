@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from datetime import datetime
 
 
 class User(AbstractUser):
@@ -35,7 +36,11 @@ class Messages(models.Model):
         }
 
 class LastMessageSeen(models.Model):
-    sender    =   models.ForeignKey("User", on_delete=models.CASCADE,related_name="s")
-    reciever  =   models.ForeignKey("User", on_delete=models.CASCADE,related_name="r")
-    last_seen_message_date = models.DateTimeField(auto_now_add=True)
+    user1 =   models.ForeignKey("User", on_delete=models.CASCADE,related_name="u1")
+    user2 =   models.ForeignKey("User", on_delete=models.CASCADE,related_name="u2")
+    last_time_read = models.DateTimeField(null=True,blank=True)
+
+    def time_read(self):
+        msg_tm = self.last_time_read or datetime(1990,1,1,1,1,1)
+        return msg_tm
 

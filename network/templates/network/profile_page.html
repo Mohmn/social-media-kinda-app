@@ -25,7 +25,7 @@
     <button id="msg-icon" data-bs-toggle="modal" data-bs-target="#messages">
         <div class="ntfsAndName">
             <i class="far fa-envelope fa-3x"></i>
-            <span class="badge rounded-pill bg-info text-dark"></span>
+            <span class="badge rounded-pill bg-info text-dark">{{unread_messages}}</span>
         </div>
     </button>
 
@@ -33,7 +33,7 @@
 </div>
 
 
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal" tabindex="-1"  aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered ">
         <div class="modal-content">
             <div class="modal-body">
@@ -78,14 +78,14 @@
 
 
 
-<div class="modal fade" id="messages" data-backdrop="static" data-keyboard="false" tabindex="-1"
+<div class="modal fade" id="messages" data-bs-backdrop="static" data-keyboard="false" tabindex="-1"
     aria-labelledby="messagesLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-lg" id="msg-modal-dialog">
         <div class="modal-content" id="msg-modal-content">
             <div class="modal-header" id="msg-header">
                 <p class="msg-head" id="msg-user">{{ruser.username}}</p>
                 <!-- <button type="button" class="btn-bs-close" data-dismiss="modal" aria-label="Close"></button> -->
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" id="message-btn-close" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="message-body">
